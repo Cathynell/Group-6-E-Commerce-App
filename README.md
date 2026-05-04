@@ -6,8 +6,10 @@ Backend for our e-commerce project.
 - User signup and login
 - Product display and filtering
 - Product image upload
-- Wallet system
+- Cart management
+- Wallet system with demo money
 - Checkout and payment
+- Order history
 
 ## Setup
 
@@ -22,6 +24,7 @@ SUPABASE_URL=your_url
 SUPABASE_KEY=your_key
 SUPABASE_SECRET_KEY=your_secret_key
 PRODUCT_IMAGES_BUCKET=product-images
+WALLET_CURRENCY=NGN
 JWT_SECRET=your_secret
 PORT=5000
 ```
@@ -45,6 +48,10 @@ Create a bucket named `product-images`.
 Users now have a `role` field:
 - `user`: can browse products
 - `admin`: can create, edit, delete, and upload product images
+
+## Database Setup
+
+Run the SQL in [database/schema.sql](/abs/c:/Users/ojoje/OneDrive/Desktop/Sen%20Js/E-commerce/Group-6-E-Commerce-App/database/schema.sql) inside Supabase SQL Editor before using cart, wallet, checkout, payments, and orders.
 
 ## API Routes
 
@@ -319,11 +326,129 @@ Store either:
 - `publicUrl` in `products.image_url`
 - `path` in `image_path`
 
+### Cart
+
+All cart routes require `Authorization: Bearer <token>`.
+
+#### Get cart
+```http
+GET /api/cart
+```
+
+#### Add item to cart
+```http
+POST /api/cart/items
+Content-Type: application/json
+
+{
+  "productId": "product-uuid",
+  "quantity": 2
+}
+```
+
+#### Update cart item quantity
+```http
+PUT /api/cart/items/:itemId
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+```
+
+#### Remove a cart item
+```http
+DELETE /api/cart/items/:itemId
+```
+
+#### Clear cart
+```http
+DELETE /api/cart/clear
+```
+
+### Wallet
+
+The wallet uses demo money for now.
+
+#### Get wallet
+```http
+GET /api/wallet
+```
+
+#### Fund wallet with demo money
+```http
+POST /api/wallet/top-up
+Content-Type: application/json
+
+{
+  "amount": 500000,
+  "description": "Demo funding"
+}
+```
+
+#### Wallet transactions
+```http
+GET /api/wallet/transactions
+```
+
+### Checkout
+
+#### Checkout preview
+```http
+GET /api/checkout/preview
+```
+
+Returns the current cart totals, wallet balance, and whether the wallet can cover the purchase.
+
+#### Complete checkout
+```http
+POST /api/checkout
+Content-Type: application/json
+
+{
+  "paymentMethod": "wallet",
+  "notes": "Leave at the front desk",
+  "shippingAddress": {
+    "fullName": "Jane Doe",
+    "phoneNumber": "+2348000000000",
+    "line1": "12 Marina Road",
+    "city": "Lagos",
+    "state": "Lagos",
+    "country": "Nigeria"
+  }
+}
+```
+
+What happens during checkout:
+- The server reads the cart
+- Validates stock availability
+- Debits the demo wallet
+- Creates a payment record
+- Creates the order and order items
+- Clears the cart
+
+### Orders
+
+#### Order history
+```http
+GET /api/orders
+```
+
+Returns all orders for the logged-in user, including the items ordered and linked payment records.
+
+#### Single order
+```http
+GET /api/orders/:orderId
+```
+
 ## Frontend Notes
 
 - Send the JWT token as `Authorization: Bearer <token>`
 - Product management routes are admin only
 - Product listing and categories require login
+- Cart, wallet, checkout, and order history require login
+- Checkout currently supports `wallet` only
+- Wallet top-up is demo-only for now
 - Prices are numbers
 - `stock_quantity` is a number
 

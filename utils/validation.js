@@ -65,6 +65,93 @@ const loginSchema = Joi.object({
     }),
 });
 
+const cartItemSchema = Joi.object({
+  productId: Joi.string()
+    .trim()
+    .required()
+    .messages({
+      'any.required': 'Product ID is required',
+    }),
+  quantity: Joi.number()
+    .integer()
+    .min(1)
+    .default(1)
+    .messages({
+      'number.base': 'Quantity must be a number',
+      'number.integer': 'Quantity must be an integer',
+      'number.min': 'Quantity must be at least 1',
+    }),
+});
+
+const cartItemUpdateSchema = Joi.object({
+  quantity: Joi.number()
+    .integer()
+    .min(1)
+    .required()
+    .messages({
+      'number.base': 'Quantity must be a number',
+      'number.integer': 'Quantity must be an integer',
+      'number.min': 'Quantity must be at least 1',
+      'any.required': 'Quantity is required',
+    }),
+});
+
+const walletTopUpSchema = Joi.object({
+  amount: Joi.number()
+    .min(1)
+    .required()
+    .messages({
+      'number.base': 'Amount must be a number',
+      'number.min': 'Amount must be at least 1',
+      'any.required': 'Amount is required',
+    }),
+  description: Joi.string()
+    .trim()
+    .max(255)
+    .optional()
+    .messages({
+      'string.max': 'Description must not exceed 255 characters',
+    }),
+  reference: Joi.string()
+    .trim()
+    .max(120)
+    .optional()
+    .messages({
+      'string.max': 'Reference must not exceed 120 characters',
+    }),
+});
+
+const checkoutSchema = Joi.object({
+  paymentMethod: Joi.string()
+    .valid('wallet')
+    .default('wallet')
+    .messages({
+      'any.only': 'Payment method must be wallet',
+    }),
+  notes: Joi.string()
+    .trim()
+    .allow('')
+    .max(500)
+    .optional()
+    .messages({
+      'string.max': 'Notes must not exceed 500 characters',
+    }),
+  shippingAddress: Joi.object({
+    fullName: Joi.string().trim().max(100).optional(),
+    phoneNumber: Joi.string().trim().max(30).optional(),
+    line1: Joi.string().trim().max(255).optional(),
+    line2: Joi.string().trim().max(255).allow('').optional(),
+    city: Joi.string().trim().max(100).optional(),
+    state: Joi.string().trim().max(100).optional(),
+    postalCode: Joi.string().trim().max(30).allow('').optional(),
+    country: Joi.string().trim().max(100).optional(),
+  })
+    .optional()
+    .messages({
+      'object.base': 'Shipping address must be an object',
+    }),
+});
+
 /**
  * Validation schema for product filtering
  */
@@ -324,6 +411,10 @@ const validateData = (data, schema) => {
 module.exports = {
   signupSchema,
   loginSchema,
+  cartItemSchema,
+  cartItemUpdateSchema,
+  walletTopUpSchema,
+  checkoutSchema,
   productFilterSchema,
   productImageUploadSchema,
   createProductSchema,
