@@ -78,3 +78,18 @@ CREATE TABLE users (
 ## Password Rules
 - 8+ characters
 - 1 uppercase, 1 lowercase, 1 number
+
+## Testing and Debugging
+
+
+
+## Group Members and Roles 
+Team Leader
+-Ojo Jeremiah
+
+Frontend Developers
+-Mbama Elsie
+-Ajayi Cathynell
+-Balogun Halima
+-
+-
