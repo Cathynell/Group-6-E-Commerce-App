@@ -41,6 +41,7 @@ const signup = async (req, res) => {
       email: email.toLowerCase(),
       password_hash: hashedPassword,
       phone_number: phoneNumber || null,
+      role: 'user',
       created_at: new Date(),
       updated_at: new Date(),
     });
@@ -59,6 +60,7 @@ const signup = async (req, res) => {
         id: result.data.id,
         email: result.data.email,
         fullName: result.data.full_name,
+        role: result.data.role,
       },
       '7d'
     );
@@ -72,6 +74,7 @@ const signup = async (req, res) => {
         fullName: result.data.full_name,
         email: result.data.email,
         phoneNumber: result.data.phone_number,
+        role: result.data.role,
         token,
       },
     });
@@ -130,6 +133,7 @@ const login = async (req, res) => {
         id: user.id,
         email: user.email,
         fullName: user.full_name,
+        role: user.role,
       },
       '7d'
     );
@@ -143,6 +147,7 @@ const login = async (req, res) => {
         fullName: user.full_name,
         email: user.email,
         phoneNumber: user.phone_number,
+        role: user.role,
         token,
       },
     });

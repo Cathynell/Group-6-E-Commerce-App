@@ -4,6 +4,16 @@
 > Department of Software Engineering | Second Semester
 
 ## Project Description
+Backend for our e-commerce project.
+
+## What We're Building
+- User signup and login
+- Product display and filtering
+- Product image upload
+- Cart management
+- Wallet system with demo money
+- Checkout and payment
+- Order history
 
 This is a full-stack Mini E-Commerce web application that allows users to browse products, add items to a cart, and make purchases. 
 
@@ -73,11 +83,15 @@ cd backend
 npm install
 ```
 
-# Create a .env file and add your Supabase credentials
+
 ```
+# Create `.env` file and add your Supabase credentials:
+```env
 SUPABASE_URL=your_url
 SUPABASE_KEY=your_key
 SUPABASE_SECRET_KEY=your_secret_key
+PRODUCT_IMAGES_BUCKET=product-images
+WALLET_CURRENCY=NGN
 JWT_SECRET=your_secret
 PORT=5000
 DB_URL=http://localhost:5000`
@@ -91,7 +105,6 @@ npm run dev
 
 4. Frontend Setup:
    cd frontend
-   npm install
 
 5. Start frontend:
    npm start
