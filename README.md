@@ -15,8 +15,8 @@ The application is built using modern JavaScript technologies including React fo
 |------|------------|------|
 | AJAYI, Cathynell | 24120112007 | Frontend|
 | BALOGUN, Halima | 24120112014 |Frontend |
-| FEMI-SIPE, Oluwatamilore | 24120112022 | |
-| GABRIEL-LOUIS, Onyedikachi | 24120112023 | Frontend|
+| FEMI-SIPE, Oluwatamilore | 24120112022 | F|
+| GABRIEL-LOUIS, Onyedikachi | 24120112023 | Dev|
 | MBAMA, Elsie | 24120112029 | |
 | OJO, Jeremiah | 25120112060 |Backend |
 | OSEGHALE, Nehireme | 24120112048 | QA/Documentation||
