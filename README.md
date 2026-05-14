@@ -218,12 +218,11 @@ npm run dev
 
 ---
 
-
-## Testing
+##  Testing
 
 Testing is currently being handled by the QA team. See the full details in:
-- [`BUG_REPORT.md`](./BUG_REPORT.md) — list of bugs found and their status
-- [`QA_CHECKLIST.md`](./QA_CHECKLIST.md) — checklist of features tested
+- [`BUG_REPORT.md`](./qa/BUG_REPORT.md) — list of bugs found and their status
+- [`QA_CHECKLIST.md`](./qa/QA_CHECKLIST.md) — checklist of features tested
 
 Bugs were documented and resolved using GitHub Issues.
 
