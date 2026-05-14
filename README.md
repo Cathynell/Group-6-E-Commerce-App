@@ -9,27 +9,39 @@ This is a full-stack Mini E-Commerce web application that allows users to browse
 
 The application is built using modern JavaScript technologies including React for the frontend and Node.js for the backend.
 
+---
+
 ## Team Members
 
 | Name | Matric No. | Role |
 |------|------------|------|
-| AJAYI, Cathynell | 24120112007 | Frontend|
-| BALOGUN, Halima | 24120112014 |Frontend |
-| FEMI-SIPE, Oluwatamilore | 24120112022 | |
-| GABRIEL-LOUIS, Onyedikachi | 24120112023 | Frontend|
-| MBAMA, Elsie | 24120112029 | |
-| OJO, Jeremiah | 25120112060 |Backend |
-| OSEGHALE, Nehireme | 24120112048 | QA/Documentation||
-| AGOLO, Oghenerukevwe | 24120112006 | QA/Documentation|
-| YAKUBU, Emmanuel | 24120112059 | |
+| AJAYI Cathynell | 24120112007 | Frontend |
+| BALOGUN Halima | 24120112014 | Frontend |
+| FEMI-SIPE Oluwatamilore | 24120112022 |Frontend |
+| GABRIEL-LOUIS Onyedikachi | 24120112023 | DevOps Integration |
+| MBAMA Elsie | 24120112029 | Frontend |
+| OJO Jeremiah | 25120112060 | Backend |
+| OSEGHALE Nehireme | 24120112048 | QA/Documentation |
+| AGOLO Oghenerukevwe | 24120112006 | QA/Documentation |
+| YAKUBU Emmanuel | 24120112059 | Frontend |
+
+---
 
 ## Features
 
-- User registration and login
+- User signup and login
+- Product display and filtering
+- Product image upload
+- Cart management
+- Wallet system with demo money
+- Checkout and payment
+- Order history
 - Browse available products
 - Add and remove items from cart
 - Checkout functionality
 - Responsive UI
+
+---
 
 ## Tech Stack
 
@@ -44,8 +56,13 @@ Backend:
 Database:
 - Supabase SQL
 
+Styling: 
+
 Tools:
 - Git & GitHub
+
+---
+
 
 ## Installation and Setup
 
@@ -63,7 +80,7 @@ Make sure you have these installed:
 2. Navigate into the project folder:
    cd Group-6-E-Commerce-App
 
-3. Backend Setup:
+### Backend Setup:
 ```bash
 # Navigate to backend folder
 cd backend
@@ -73,11 +90,15 @@ cd backend
 npm install
 ```
 
-# Create a .env file and add your Supabase credentials
+
 ```
+# Create `.env` file and add your Supabase credentials:
+```env
 SUPABASE_URL=your_url
 SUPABASE_KEY=your_key
 SUPABASE_SECRET_KEY=your_secret_key
+PRODUCT_IMAGES_BUCKET=product-images
+WALLET_CURRENCY=NGN
 JWT_SECRET=your_secret
 PORT=5000
 DB_URL=http://localhost:5000`
@@ -89,20 +110,97 @@ npm run dev
 ```
 
 
-4. Frontend Setup:
-   cd frontend
-   npm install
-
+### Frontend Setup:
+  ```bash
+cd frontend
+npm install
+npm run dev
+```
 5. Start frontend:
    npm start
 
+---
 
 ## API Endpoints
 
 
+> All endpoints require `Authorization: Bearer <token>` unless stated otherwise.
+
+---
+
+###  Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/signup` | Register a new user |
+| POST | `/api/auth/login` | Login a user |
+
+---
+
+###  Products
+| Method | Endpoint | Description | Access |
+|--------|----------|-------------|--------|
+| GET | `/api/products` | Get all products (supports filters) | All users |
+| POST | `/api/products` | Create a new product | Admin only |
+| PUT | `/api/products/:id` | Update a product | Admin only |
+| DELETE | `/api/products/:id` | Delete a product | Admin only |
+| GET | `/api/products/categories` | Get all categories | All users |
+| POST | `/api/products/upload-image` | Upload a product image | Admin only |
+
+#### Product Query Parameters
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| `category` | Filter by category | `category=Travel` |
+| `search` | Search by name or description | `search=bag` |
+| `minPrice` | Minimum price | `minPrice=5000` |
+| `maxPrice` | Maximum price | `maxPrice=100000` |
+| `sortBy` | Sort by field | `sortBy=price` |
+| `sortOrder` | Sort direction | `sortOrder=asc` |
+| `page` | Page number | `page=1` |
+| `limit` | Results per page (max 100) | `limit=10` |
+
+---
+
+###  Cart
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/cart` | Get current cart |
+| POST | `/api/cart/items` | Add item to cart |
+| PUT | `/api/cart/items/:itemId` | Update item quantity |
+| DELETE | `/api/cart/items/:itemId` | Remove item from cart |
+| DELETE | `/api/cart/clear` | Clear entire cart |
+
+---
+
+###  Wallet
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/wallet` | Get wallet balance |
+| POST | `/api/wallet/top-up` | Fund wallet with demo money |
+| GET | `/api/wallet/transactions` | Get transaction history |
+
+---
+
+###  Checkout
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/checkout/preview` | Preview cart totals and wallet balance |
+| POST | `/api/checkout` | Complete checkout |
+
+---
+
+###  Orders
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/orders` | Get order history |
+| GET | `/api/orders/:orderId` | Get single order details |
+
+
+---
+
+
 ## Testing
 
-Testing is currently beinf handled by the QA team. See the full details in:
+Testing is currently being handled by the QA team. See the full details in:
 - [`BUG_REPORT.md`](./BUG_REPORT.md) — list of bugs found and their status
 - [`QA_CHECKLIST.md`](./QA_CHECKLIST.md) — checklist of features tested
 
