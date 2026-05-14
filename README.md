@@ -109,14 +109,14 @@ DB_URL=http://localhost:5000`
 npm run dev
 ```
 
-### 🗄️ Database Setup
+###  Database Setup
 - This project uses **Supabase** as the database
 - Run the SQL file in `database/schema.sql` inside your Supabase SQL Editor
 - This must be done before using cart, wallet, checkout, payments and orders
 
 ---
 
-### 🪣 Supabase Storage Setup
+###  Supabase Storage Setup
 Create a bucket in Supabase with these settings:
 - **Bucket name:** `product-images`
 - **Visibility:** `Public`
@@ -124,7 +124,7 @@ Create a bucket in Supabase with these settings:
 ---
 
 
-### 👤 User Roles
+###  User Roles
 | Role | Permissions |
 |------|-------------|
 | `user` | Browse products |
