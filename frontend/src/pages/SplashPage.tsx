@@ -16,28 +16,32 @@ export default function SplashPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plaster&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plaster&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Cormorant+Garamond:wght@600;700&display=swap');
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-          background-color: #2b1d18;
+        html, body, #root {
+          width: 100%;
+          height: 100%;
           min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-family: 'DM Sans', sans-serif;
         }
 
-        .splash-phone {
-          width: 375px;
-          height: 812px;
-          border-radius: 48px;
+        body {
+          background-color: #1b2e17;
+          font-family: 'Inter', sans-serif;
           overflow: hidden;
+        }
+
+        .splash-screen {
+          width: 100vw;
+          height: 100vh;
           position: relative;
-          box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 30px 80px rgba(0,0,0,0.7);
           background-image: url(${leavesBg});
           background-size: cover;
           background-position: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         /* ── INTRO SCREEN ── */
@@ -52,7 +56,7 @@ export default function SplashPage() {
           background-image: url(${leavesBg});
           background-size: cover;
           background-position: center;
-          transition: opacity 0.8s ease;
+          transition: opacity 0.9s ease;
         }
 
         .intro-screen.hidden {
@@ -63,7 +67,7 @@ export default function SplashPage() {
         .intro-overlay {
           position: absolute;
           inset: 0;
-          background: rgba(8, 20, 8, 0.58);
+          background: rgba(8, 22, 8, 0.60);
         }
 
         .intro-logo-wrap {
@@ -72,39 +76,33 @@ export default function SplashPage() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 18px;
+          gap: 22px;
         }
 
         .intro-logo {
-          font-family: 'Plaster', serif;
-          font-size: 82px;
+          font-family: 'Plaster', cursive;
+          font-size: 120px;
           font-weight: 400;
           line-height: 1;
-          letter-spacing: -2px;
+          letter-spacing: -3px;
           display: flex;
           align-items: center;
         }
 
-        .intro-logo .v-letter {
-          color: ##4EA8A66;
-        }
-
-        .intro-logo .ale-letters {
-          color: #f0e8db;
-        }
+        .v-letter { color: #4E8A66; }
+        .ale-letters { color: #f0e8db; }
 
         .intro-tagline {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 13px;
+          font-family: 'Inter', sans-serif;
+          font-size: 16px;
           font-weight: 300;
           color: #4E8A66;
-          letter-spacing: 0.5px;
+          letter-spacing: 1px;
         }
 
         .intro-tagline em {
           font-style: italic;
           color: #4E8A66;
-          font-weight: 300;
         }
 
         /* ── MAIN SPLASH ── */
@@ -113,128 +111,115 @@ export default function SplashPage() {
           inset: 0;
           background: linear-gradient(
             to bottom,
-            rgba(10,18,8,0.25) 0%,
-            rgba(10,18,8,0.15) 30%,
-            rgba(8,15,6,0.6) 65%,
-            rgba(5,10,4,0.93) 100%
+            rgba(10,18,8,0.3) 0%,
+            rgba(10,18,8,0.1) 30%,
+            rgba(8,15,6,0.65) 70%,
+            rgba(5,10,4,0.95) 100%
           );
           z-index: 2;
         }
-
-        .splash-status {
-          position: absolute;
-          top: 16px;
-          left: 24px;
-          right: 24px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          z-index: 10;
-        }
-
-        .splash-time { font-size: 15px; font-weight: 600; color: #fff; }
-        .splash-icons { display: flex; align-items: center; gap: 5px; }
 
         .splash-content {
           position: absolute;
           bottom: 0;
           left: 0;
           right: 0;
-          padding: 0 28px 52px;
+          padding: 0 80px 70px;
           z-index: 10;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
+          max-width: 700px;
         }
 
         .splash-pill {
           background: rgba(255,255,255,0.12);
-          border: 1px solid rgba(255,255,255,0.2);
+          border: 1px solid rgba(255,255,255,0.22);
           backdrop-filter: blur(8px);
           border-radius: 20px;
-          padding: 5px 14px;
-          font-size: 11px;
+          padding: 6px 18px;
+          font-size: 12px;
           font-weight: 500;
           color: rgba(255,255,255,0.8);
-          letter-spacing: 1.5px;
+          letter-spacing: 2px;
           text-transform: uppercase;
-          margin-bottom: 16px;
+          margin-bottom: 20px;
           animation: fadeUp 0.6s ease 0.1s both;
         }
 
         .splash-title {
-          font-family: 'Playfair Display', serif;
-          font-size: 44px;
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 72px;
           font-weight: 700;
           color: #ffffff;
-          line-height: 1.1;
-          margin-bottom: 14px;
+          line-height: 1.05;
+          margin-bottom: 18px;
           animation: fadeUp 0.6s ease 0.25s both;
         }
 
-        .splash-title em { font-style: italic; color: #9dd99d; }
+        .splash-title em {
+          font-style: italic;
+          color: #9dd99d;
+        }
 
         .splash-desc {
-          font-size: 14px;
+          font-family: 'Inter', sans-serif;
+          font-size: 16px;
           font-weight: 300;
-          color: rgba(255,255,255,0.65);
-          line-height: 1.7;
-          margin-bottom: 36px;
-          max-width: 290px;
+          color: rgba(255,255,255,0.62);
+          line-height: 1.75;
+          margin-bottom: 42px;
+          max-width: 440px;
           animation: fadeUp 0.6s ease 0.4s both;
         }
 
         .splash-btn-row {
           display: flex;
-          flex-direction: column;
-          gap: 12px;
-          width: 100%;
+          flex-direction: row;
+          gap: 16px;
           animation: fadeUp 0.6s ease 0.55s both;
         }
 
         .btn-primary {
-          width: 100%;
-          height: 54px;
+          height: 52px;
+          padding: 0 40px;
           background: linear-gradient(140deg, #2e6e2e 0%, #3d9a3d 100%);
           border: none;
           border-radius: 30px;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 16px;
+          font-family: 'Inter', sans-serif;
+          font-size: 15px;
           font-weight: 600;
           color: #fff;
           cursor: pointer;
           box-shadow: 0 8px 24px rgba(45,110,45,0.45);
-          transition: transform 0.14s ease;
+          transition: transform 0.14s ease, box-shadow 0.14s ease;
+          white-space: nowrap;
         }
 
-        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 30px rgba(45,110,45,0.55);
+        }
 
         .btn-secondary {
-          width: 100%;
-          height: 54px;
+          height: 52px;
+          padding: 0 36px;
           background: rgba(255,255,255,0.08);
-          border: 1.5px solid rgba(255,255,255,0.22);
+          border: 1.5px solid rgba(255,255,255,0.28);
           border-radius: 30px;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 15px;
           font-weight: 500;
           color: rgba(255,255,255,0.85);
           cursor: pointer;
-          transition: background 0.14s ease;
+          backdrop-filter: blur(6px);
+          transition: background 0.14s ease, border-color 0.14s ease;
+          white-space: nowrap;
         }
 
-        .btn-secondary:hover { background: rgba(255,255,255,0.14); }
-
-        .splash-home-bar {
-          position: absolute;
-          bottom: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 110px;
-          height: 4px;
-          background: rgba(255,255,255,0.25);
-          border-radius: 3px;
-          z-index: 10;
+        .btn-secondary:hover {
+          background: rgba(255,255,255,0.14);
+          border-color: rgba(255,255,255,0.4);
         }
 
         @keyframes fadeUp {
@@ -243,9 +228,9 @@ export default function SplashPage() {
         }
       `}</style>
 
-      <div className="splash-phone">
+      <div className="splash-screen">
 
-        {/* ── INTRO SCREEN — shows for 2.5s then fades out ── */}
+        {/* ── INTRO SCREEN ── */}
         <div className={`intro-screen ${!showIntro ? 'hidden' : ''}`}>
           <div className="intro-overlay" />
           <div className="intro-logo-wrap">
@@ -259,31 +244,8 @@ export default function SplashPage() {
           </div>
         </div>
 
-        {/* ── MAIN SPLASH CONTENT ── */}
+        {/* ── MAIN SPLASH ── */}
         <div className="splash-overlay" />
-
-        <div className="splash-status">
-          <span className="splash-time">9:41</span>
-          <div className="splash-icons">
-            <svg width="17" height="12" viewBox="0 0 17 12" fill="white">
-              <rect x="0" y="7" width="3" height="5" rx="0.8" opacity="0.4"/>
-              <rect x="4.5" y="4.5" width="3" height="7.5" rx="0.8" opacity="0.6"/>
-              <rect x="9" y="2" width="3" height="10" rx="0.8"/>
-              <rect x="13.5" y="0" width="3" height="12" rx="0.8"/>
-            </svg>
-            <svg width="16" height="12" viewBox="0 0 24 18" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-              <path d="M1 6.5C4.5 3 9 1 12 1s7.5 2 11 5.5"/>
-              <path d="M4 10c2-2 4.5-3.5 8-3.5s6 1.5 8 3.5"/>
-              <path d="M7.5 13.5c1.5-1.5 2.5-2 4.5-2s3 .5 4.5 2"/>
-              <circle cx="12" cy="17" r="1.5" fill="white"/>
-            </svg>
-            <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
-              <rect x="0.75" y="0.75" width="21.5" height="10.5" rx="2.2" stroke="white" strokeWidth="1.5"/>
-              <rect x="2.5" y="2.5" width="16" height="7" rx="1.2" fill="white"/>
-              <rect x="23" y="4" width="2" height="4" rx="1" fill="white" opacity="0.5"/>
-            </svg>
-          </div>
-        </div>
 
         <div className="splash-content">
           <span className="splash-pill">New Collection</span>
@@ -304,7 +266,6 @@ export default function SplashPage() {
           </div>
         </div>
 
-        <div className="splash-home-bar" />
       </div>
     </>
   );
