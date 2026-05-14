@@ -1,16 +1,3 @@
-FRONTEND QA CHECKLIST
----------------------
-[ ] Home/Product page loads without errors
-[ ] Product images and prices display correctly
-[ ] "Add to Cart" button works on each product
-[ ] Cart page shows correct items and total
-[ ] Removing an item from cart works
-[ ] Checkout page submits without crashing
-[ ] App works on mobile screen size (resize browser to check)
-[ ] No broken links or blank pages
-[ ] Error messages show when something goes wrong
-
-
 # QA Checklist — Mini E-Commerce App
 
 ## Backend API
