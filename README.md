@@ -109,6 +109,27 @@ DB_URL=http://localhost:5000`
 npm run dev
 ```
 
+### 🗄️ Database Setup
+- This project uses **Supabase** as the database
+- Run the SQL file in `database/schema.sql` inside your Supabase SQL Editor
+- This must be done before using cart, wallet, checkout, payments and orders
+
+---
+
+### 🪣 Supabase Storage Setup
+Create a bucket in Supabase with these settings:
+- **Bucket name:** `product-images`
+- **Visibility:** `Public`
+
+---
+
+
+### 👤 User Roles
+| Role | Permissions |
+|------|-------------|
+| `user` | Browse products |
+| `admin` | Create, edit, delete and upload product images |
+
 
 ### Frontend Setup:
   ```bash
@@ -219,9 +240,6 @@ In Development
 ## License
 
 This project was built for academic purposes — COS 202, University project.
-
-
-
 
 
 ## Live Demo
