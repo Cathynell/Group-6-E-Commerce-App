@@ -4,4 +4,4 @@
 
 | Bug ID | Description | Steps to Reproduce | Expected Result | Actual Result | Status |
 |--------|-------------|-------------------|-----------------|---------------|--------|
-| BUG-01 |  |  | | | Open |
+| BUG-01 | All endpoints fail — Supabase not connecting | Run qa/api.test.js | All tests pass | 500 Database error: fetch failed | Open |
