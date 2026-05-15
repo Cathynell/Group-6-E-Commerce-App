@@ -464,31 +464,11 @@ GET /api/orders/:orderId
 
 ## Group Members & Roles
 
-### Team Leader
 | Name | Role |
 |------|------|
 | Ojo Jeremiah | Team Leader & Backend Developer |
-
----
-
-### Frontend Developers / Design
-| Name | Role |
-|------|------|
 | Mbama Elsie | Frontend Developer & Designer |
 | Ajayi Cathynell | Frontend Developer & Designer |
 | Balogun Halima | Frontend Developer & Designer |
-
----
-
-### Backend Developers
-| Name | Role |
-|------|------|
-| Ojo Jeremiah | Backend Developer |
-
----
-
-### Testing & Documentation
-| Name | Role |
-|------|------|
 | Agolo Rukevwe | Testing & Documentation |
 | Oseghale Nehireme | Testing & Documentation |
