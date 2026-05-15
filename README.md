@@ -20,7 +20,7 @@ The application is built using modern JavaScript technologies including React fo
 | FEMI-SIPE Oluwatamilore | 24120112022 |Frontend |
 | GABRIEL-LOUIS Onyedikachi | 24120112023 | DevOps Integration |
 | MBAMA Elsie | 24120112029 | Frontend |
-| OJO Jeremiah | 25120112060 | Backend |
+| OJO Jeremiah | 25120112060 | Backend/Team Lead |
 | OSEGHALE Nehireme | 24120112048 | QA/Documentation |
 | AGOLO Oghenerukevwe | 24120112006 | QA/Documentation |
 | YAKUBU Emmanuel | 24120112059 | Frontend |
