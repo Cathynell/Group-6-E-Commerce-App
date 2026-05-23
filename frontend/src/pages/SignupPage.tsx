@@ -15,7 +15,7 @@ export default function SignupPage() {
     if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
     if (password.length < 6) { alert('Password must be at least 6 characters.'); return; }
     if (!agreed) { alert('Please agree to the Terms & Conditions.'); return; }
-    navigate('/home');
+    navigate('/dashboard');
   }
 
   return (

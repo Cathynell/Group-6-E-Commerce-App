@@ -12,7 +12,7 @@ export default function LoginPage() {
   function handleLogin() {
     if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
     if (password.length < 6) { alert('Please enter your password.'); return; }
-    navigate('/home');
+    navigate('/dashboard');
   }
 
   return (
