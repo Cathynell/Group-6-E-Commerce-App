@@ -210,9 +210,9 @@ export default function SignupPage() {
               />
               <label htmlFor="terms" style={{ fontSize: 12, color: '#888', lineHeight: 1.55, cursor: 'pointer' }}>
                 I agree to the{' '}
-                <a href="#" style={{ color: '#222', fontWeight: 600, textDecoration: 'none' }}>Terms of Service</a>
+                <a href="/terms" style={{ color: '#222', fontWeight: 600, textDecoration: 'none' }}>Terms of Service</a>
                 {' '}and{' '}
-                <a href="#" style={{ color: '#222', fontWeight: 600, textDecoration: 'none' }}>Privacy Policy</a>
+                <a href="/privacy" style={{ color: '#222', fontWeight: 600, textDecoration: 'none' }}>Privacy Policy</a>
               </label>
             </div>
 
@@ -250,7 +250,21 @@ export default function SignupPage() {
 
             <p style={{ textAlign: 'center', fontSize: 13, color: '#888' }}>
               Already have an account?{' '}
-              <a href="#" onClick={() => navigate('/login')} style={{ color: '#1a4d2e', fontWeight: 600, textDecoration: 'none' }}>Log in.</a>
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  color: '#1a4d2e',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Log in.
+              </button>
             </p>
 
           </div>

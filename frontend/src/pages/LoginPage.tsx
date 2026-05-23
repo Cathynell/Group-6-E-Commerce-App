@@ -273,7 +273,22 @@ export default function LoginPage() {
 
             <p style={{ textAlign: 'center', fontSize: 13, color: '#888' }}>
               Don't have an account?
-              <a href="#" onClick={() => navigate('/signup')} style={{ color: '#1a4d2e', fontWeight: 600, textDecoration: 'none', marginLeft: 3 }}>Sign up.</a>
+              <button
+                type="button"
+                onClick={() => navigate('/signup')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  marginLeft: 3,
+                  color: '#1a4d2e',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Sign up.
+              </button>
             </p>
 
           </div>
