@@ -1,5 +1,4 @@
 import React, { useMemo, useState, type Dispatch, type SetStateAction } from "react";
-import { createRoot } from "react-dom/client";
 import {
   Bell,
   ChevronDown,
@@ -28,6 +27,8 @@ const orders = [
   { id: "#ORD-0024", customer: "Emily Davis", date: "May 24, 2024", amount: "N8,000", status: "Completed" },
 ];
 
+type Order = (typeof orders)[number];
+
 const summaryCards = [
   { title: "Total Orders", value: "1,290", delta: "18% from last month", icon: ClipboardList, tone: "blue" },
   { title: "Pending Orders", value: "230", delta: "8% from last month", icon: ShoppingBag, tone: "gold" },
@@ -43,12 +44,12 @@ const navItems = [
   { label: "Settings", icon: Settings },
 ];
 
-function App() {
+export default function OrdersPage() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All Status");
   const [dateRange, setDateRange] = useState("May 20, 2024 - May 26, 2024");
   const [page, setPage] = useState(1);
-  const [viewedOrder, setViewedOrder] = useState(null);
+  const [viewedOrder, setViewedOrder] = useState<Order | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
@@ -242,7 +243,7 @@ function App() {
                 ))}
                 {filteredOrders.length === 0 && (
                   <tr>
-                    <td className="empty-state" colSpan="6">
+                    <td className="empty-state" colSpan={6}>
                       No orders match the selected filters.
                     </td>
                   </tr>
@@ -321,5 +322,3 @@ function App() {
     </main>
   );
 }
-
-createRoot(document.getElementById("root")).render(<App />);
