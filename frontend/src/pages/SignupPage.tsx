@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import textingImg from '../assets/texting.jpg';
+import { extractToken, setAuthToken, signup } from '../api/auth';
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,14 +9,26 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  function handleSignup() {
+  async function handleSignup() {
     if (!name) { alert('Please enter your full name.'); return; }
     if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
     if (password.length < 6) { alert('Password must be at least 6 characters.'); return; }
     if (!agreed) { alert('Please agree to the Terms & Conditions.'); return; }
-    navigate('/dashboard');
+
+    try {
+      setIsSubmitting(true);
+      const response = await signup({ name, email, password });
+      const token = extractToken(response);
+      if (token) setAuthToken(token);
+      navigate('/dashboard');
+    } catch (error: any) {
+      alert(error?.message || 'Signup failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -217,7 +230,9 @@ export default function SignupPage() {
             </div>
 
             {/* Sign up button */}
-            <button className="signup-btn" onClick={handleSignup}>Sign up</button>
+            <button className="signup-btn" onClick={handleSignup} disabled={isSubmitting}>
+              {isSubmitting ? 'Creating account...' : 'Sign up'}
+            </button>
 
             {/* Divider */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>

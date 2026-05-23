@@ -1,18 +1,31 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clothesImg from '../assets/clothes.jpg';
+import { extractToken, login, setAuthToken } from '../api/auth';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  function handleLogin() {
+  async function handleLogin() {
     if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
     if (password.length < 6) { alert('Please enter your password.'); return; }
-    navigate('/dashboard');
+
+    try {
+      setIsSubmitting(true);
+      const response = await login({ email, password });
+      const token = extractToken(response);
+      if (token) setAuthToken(token);
+      navigate('/dashboard');
+    } catch (error: any) {
+      alert(error?.message || 'Login failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -240,7 +253,9 @@ export default function LoginPage() {
             </div>
 
             {/* Login button */}
-            <button className="login-btn" onClick={handleLogin}>Login</button>
+            <button className="login-btn" onClick={handleLogin} disabled={isSubmitting}>
+              {isSubmitting ? 'Logging in...' : 'Login'}
+            </button>
 
             {/* Divider */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22 }}>
