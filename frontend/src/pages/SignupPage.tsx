@@ -15,12 +15,12 @@ export default function SignupPage() {
   async function handleSignup() {
     if (!name) { alert('Please enter your full name.'); return; }
     if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
-    if (password.length < 6) { alert('Password must be at least 6 characters.'); return; }
+    if (password.length < 8) { alert('Password must be at least 8 characters.'); return; }
     if (!agreed) { alert('Please agree to the Terms & Conditions.'); return; }
 
     try {
       setIsSubmitting(true);
-      const response = await signup({ fullName: name, email, password });
+      const response = await signup({ fullName: name, email, password, confirmPassword: password });
       const token = extractToken(response);
       if (token) setAuthToken(token);
       navigate('/dashboard');
