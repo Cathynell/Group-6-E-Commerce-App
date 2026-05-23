@@ -20,7 +20,7 @@ export default function SignupPage() {
 
     try {
       setIsSubmitting(true);
-      const response = await signup({ name, email, password });
+      const response = await signup({ fullName: name, email, password });
       const token = extractToken(response);
       if (token) setAuthToken(token);
       navigate('/dashboard');

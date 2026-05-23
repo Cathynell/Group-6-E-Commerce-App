@@ -21,7 +21,7 @@ type AuthResponse = {
   data?: { token?: string };
 };
 
-export async function signup(payload: { name: string; email: string; password: string }) {
+export async function signup(payload: { fullName: string; email: string; password: string; phoneNumber?: string }) {
   return apiRequest<AuthResponse>("/api/auth/signup", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -38,4 +38,3 @@ export async function login(payload: { email: string; password: string }) {
 export function extractToken(response: AuthResponse) {
   return response.token || response.data?.token || null;
 }
-
