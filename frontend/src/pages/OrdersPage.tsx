@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Bell,
@@ -66,7 +66,7 @@ function App() {
     });
   }, [query, status, dateRange]);
 
-  function resetToFirstPage(setter, value) {
+  function resetToFirstPage<T>(setter: Dispatch<SetStateAction<T>>, value: T) {
     setter(value);
     setPage(1);
   }
