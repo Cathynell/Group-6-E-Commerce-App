@@ -14,7 +14,9 @@ const normalizeEnv = (value) => {
 };
 
 const supabaseUrl = normalizeEnv(process.env.SUPABASE_URL);
-const supabaseKey = normalizeEnv(process.env.SUPABASE_KEY);
+// On the backend we should use the service-role key (never expose to frontend)
+// so server-side DB operations are not blocked by RLS.
+const supabaseKey = normalizeEnv(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_KEY);
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase URL or Key in environment variables');

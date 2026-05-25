@@ -18,11 +18,13 @@ npm install
 2. Create `.env` file and add your Supabase credentials:
 ```
 SUPABASE_URL=your_url
-SUPABASE_KEY=your_key
-SUPABASE_SECRET_KEY=your_secret_key
+SUPABASE_KEY=your_supabase_anon_key
+SUPABASE_SECRET_KEY=your_supabase_service_role_key
 JWT_SECRET=your_secret
 PORT=5000
 ```
+
+Note: The backend uses `SUPABASE_SECRET_KEY` (service role) for server-side database operations so it can work with RLS enabled.
 
 3. Run the server:
 ```bash
@@ -30,6 +32,10 @@ npm run dev
 ```
 
 Server runs on `http://localhost:5000`
+
+## Windows TLS note (Supabase `fetch failed`)
+
+If you see `Database error: TypeError: fetch failed` with a TLS/certificate message on Windows, this project runs Node with `--use-system-ca` (see `package.json`) so Node trusts the Windows certificate store (common on school/corporate networks).
 
 ## API Routes
 
