@@ -6,6 +6,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+## Supabase Auth Setup
+
+Create `frontend/.env` based on `frontend/.env.example`:
+
+- `REACT_APP_SUPABASE_URL`
+- `REACT_APP_SUPABASE_ANON_KEY`
+
 ### `npm start`
 
 Runs the app in the development mode.\
