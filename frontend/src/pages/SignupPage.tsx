@@ -20,10 +20,15 @@ export default function SignupPage() {
 
     try {
       setIsSubmitting(true);
-      const response = await signup({ fullName: name, email, password, confirmPassword: password });
+      const response = await signup({ fullName: name, email, password });
       const token = extractToken(response);
-      if (token) setAuthToken(token);
-      navigate('/dashboard');
+      if (token) {
+        setAuthToken(token);
+        navigate('/dashboard');
+        return;
+      }
+      alert('Account created. Please check your email to confirm your account, then log in.');
+      navigate('/login');
     } catch (error: any) {
       alert(error?.message || 'Signup failed. Please try again.');
     } finally {

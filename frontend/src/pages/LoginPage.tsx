@@ -19,7 +19,11 @@ export default function LoginPage() {
       setIsSubmitting(true);
       const response = await login({ email, password });
       const token = extractToken(response);
-      if (token) setAuthToken(token);
+      if (!token) {
+        alert('Login succeeded but no session was returned. If email confirmation is enabled, confirm your email then try again.');
+        return;
+      }
+      setAuthToken(token);
       navigate('/dashboard');
     } catch (error: any) {
       alert(error?.message || 'Login failed. Please try again.');

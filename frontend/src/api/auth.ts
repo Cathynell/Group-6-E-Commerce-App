@@ -25,13 +25,8 @@ export async function signup(payload: {
   fullName: string;
   email: string;
   password: string;
-  confirmPassword: string;
   phoneNumber?: string;
 }) {
-  if (payload.password !== payload.confirmPassword) {
-    return { success: false, message: "Passwords do not match.", token: null } satisfies AuthResponse;
-  }
-
   const { data, error } = await supabase.auth.signUp({
     email: payload.email,
     password: payload.password,
@@ -43,7 +38,7 @@ export async function signup(payload: {
     },
   });
 
-  if (error) return { success: false, message: error.message, token: null, data: null };
+  if (error) throw new Error(error.message);
 
   const token = data.session?.access_token || null;
   return { success: true, token, data };
@@ -55,7 +50,7 @@ export async function login(payload: { email: string; password: string }) {
     password: payload.password,
   });
 
-  if (error) return { success: false, message: error.message, token: null, data: null };
+  if (error) throw new Error(error.message);
 
   const token = data.session?.access_token || null;
   return { success: true, token, data };
