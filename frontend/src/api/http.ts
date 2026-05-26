@@ -1,4 +1,5 @@
-const DEFAULT_API_BASE_URL = "https://group-6-e-commerce-app.onrender.com";
+// Local dev default; override in production with REACT_APP_API_URL.
+const DEFAULT_API_BASE_URL = "http://localhost:5000";
 
 export function getApiBaseUrl() {
   const envUrl = process.env.REACT_APP_API_URL;
