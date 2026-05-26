@@ -7,6 +7,10 @@ import CartPage from './pages/CartPage';
 import ProductPage from './pages/ProductPage';
 import ShopPage from './pages/ShopPage';
 import AccountPage from './pages/AccountPage';
+import OrdersPage from './pages/OrdersPage';
+import ProductsPage from './pages/ProductsPage';
+import CustomersPage from './pages/CustomersPage';
+import SettingsPage from './pages/SettingsPage';
 import { getAuthToken } from './api/auth';
 
 function App() {
@@ -22,6 +26,13 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/customers" element={<CustomersPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/checkout" element={<Navigate to="/cart" replace />} />
+        <Route path="/confirmation" element={<Navigate to="/cart" replace />} />
+        <Route path="/wallet/fund" element={<Navigate to="/account" replace />} />
         <Route path="/splash" element={<SplashPage />} />
         <Route path="*" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
       </Routes>

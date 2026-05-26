@@ -1,4 +1,5 @@
 import React, { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Bell,
   ChevronDown,
@@ -37,14 +38,15 @@ const summaryCards = [
 ];
 
 const navItems = [
-  { label: "Dashboard", icon: Home },
-  { label: "Products", icon: Package },
-  { label: "Customers", icon: Users },
-  { label: "Orders", icon: ShoppingBag, active: true },
-  { label: "Settings", icon: Settings },
+  { label: "Dashboard", icon: Home, path: "/dashboard" },
+  { label: "Products", icon: Package, path: "/products" },
+  { label: "Customers", icon: Users, path: "/customers" },
+  { label: "Orders", icon: ShoppingBag, path: "/orders", active: true },
+  { label: "Settings", icon: Settings, path: "/settings" },
 ];
 
 export default function OrdersPage() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All Status");
   const [dateRange, setDateRange] = useState("May 20, 2024 - May 26, 2024");
@@ -94,7 +96,12 @@ export default function OrdersPage() {
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
-              <button className={`nav-item ${item.active ? "active" : ""}`} key={item.label} type="button">
+              <button
+                className={`nav-item ${item.active ? "active" : ""}`}
+                key={item.label}
+                onClick={() => navigate(item.path)}
+                type="button"
+              >
                 <Icon size={18} />
                 <span>{item.label}</span>
               </button>
