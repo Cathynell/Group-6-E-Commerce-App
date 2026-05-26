@@ -22,12 +22,9 @@ export default function SignupPage() {
       setIsSubmitting(true);
       const response = await signup({ fullName: name, email, password });
       const token = extractToken(response);
-      if (token) {
-        setAuthToken(token);
-        navigate('/dashboard');
-        return;
-      }
-      alert('Account created. Please check your email to confirm your account, then log in.');
+      // Signup should not auto-navigate to dashboard; user must explicitly log in.
+      if (token) setAuthToken(token);
+      alert('Account created successfully. Please log in.');
       navigate('/login');
     } catch (error: any) {
       alert(error?.message || 'Signup failed. Please try again.');
