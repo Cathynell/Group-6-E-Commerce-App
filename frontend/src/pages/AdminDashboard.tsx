@@ -1,6 +1,9 @@
 import DashboardLayout from "../components/layout/DashboardLayout";
 import StatsCards from "../components/dashboard/StatsCards";
 import SalesOverviewChart from "../components/dashboard/SalesOverviewChart";
+import RecentOrders from "../components/dashboard/RecentOrders";
+import TopProducts from "../components/dashboard/TopProducts";
+import RecentActivities from "../components/dashboard/RecentActivities";
 
 export default function AdminDashboard() {
   return (
@@ -18,9 +21,16 @@ export default function AdminDashboard() {
       {/* Stats Cards */}
       <StatsCards />
 
-      {/* Sales Chart */}
-      <div style={{ marginBottom: "24px" }}>
+      {/* Chart + Activities Row */}
+      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "24px", marginBottom: "24px" }}>
         <SalesOverviewChart />
+        <RecentActivities />
+      </div>
+
+      {/* Orders + Products Row */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
+        <RecentOrders />
+        <TopProducts />
       </div>
 
     </DashboardLayout>
