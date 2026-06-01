@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { clearAuthToken } from '../api/auth'
+import { clearAuthToken, clearUserData, getUserData } from '../api/auth'
 
 // ── SectionCard ──────────────────────────────────────────
 function SectionCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -12,7 +12,7 @@ function SectionCard({ children, className = '' }: { children: React.ReactNode; 
 }
 
 // ── PageHeader ───────────────────────────────────────────
-function PageHeader({ profile }: { profile: { fullName: string; avatar: string } }) {
+function PageHeader({ profile }: { profile: { fullName: string; avatar: string; role?: string } }) {
   const navigate = useNavigate()
   const [mounted, setMounted] = useState(false)
 
@@ -20,8 +20,11 @@ function PageHeader({ profile }: { profile: { fullName: string; avatar: string }
 
   function logout() {
     clearAuthToken()
+    clearUserData()
     navigate('/login')
   }
+
+  const userRole = profile.role || 'User'
 
   return (
     <div className="flex items-center justify-between mb-8">
@@ -43,7 +46,7 @@ function PageHeader({ profile }: { profile: { fullName: string; avatar: string }
             className="rounded-full object-cover w-[40px] h-[40px]"
           />
           <span className="font-medium text-gray-900">{profile.fullName}</span>
-          <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">Admin</span>
+          <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">{userRole}</span>
         </div>
         <button onClick={logout} className="text-sm text-red-500 hover:underline">Logout</button>
       </div>
@@ -52,23 +55,25 @@ function PageHeader({ profile }: { profile: { fullName: string; avatar: string }
 }
 
 // ── PersonalInfoForm ─────────────────────────────────────
-const defaultData = {
-  fullName: 'John Doe',
-  email: 'johndoe@example.com',
-  phone: '+2348039103671',
-  dob: 'May 15, 1985',
-  bio: 'E-commerce enthusiast and admin of Vale Platform',
-  avatar: '',
-}
-
-function PersonalInfoForm({ onSave }: { onSave: (data: typeof defaultData) => void }) {
-  const [form, setForm] = useState(defaultData)
+function PersonalInfoForm({ userData }: { userData: { fullName: string; email: string; phoneNumber?: string; role?: string; avatar?: string } }) {
+  const [form, setForm] = useState({
+    fullName: userData.fullName,
+    email: userData.email,
+    phone: userData.phoneNumber || '',
+    dob: '',
+    bio: '',
+    avatar: userData.avatar || '',
+  })
   const [saved, setSaved] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // Load editable profile data (bio, dob, avatar) from localStorage if exists
     const stored = localStorage.getItem('profileData')
-    if (stored) setForm(JSON.parse(stored))
+    if (stored) {
+      const data = JSON.parse(stored)
+      setForm(prev => ({ ...prev, bio: data.bio || '', dob: data.dob || '', avatar: data.avatar || '' }))
+    }
     setMounted(true)
   }, [])
 
@@ -78,15 +83,25 @@ function PersonalInfoForm({ onSave }: { onSave: (data: typeof defaultData) => vo
   }
 
   const handleSave = () => {
-    localStorage.setItem('profileData', JSON.stringify(form))
+    // Save only editable fields to localStorage
+    const profileData = {
+      fullName: form.fullName,
+      email: form.email,
+      phone: form.phone,
+      bio: form.bio,
+      dob: form.dob,
+      avatar: form.avatar,
+    }
+    localStorage.setItem('profileData', JSON.stringify(profileData))
     setSaved(true)
-    onSave(form)
   }
 
   const handleCancel = () => {
     const stored = localStorage.getItem('profileData')
-    if (stored) setForm(JSON.parse(stored))
-    else setForm(defaultData)
+    if (stored) {
+      const data = JSON.parse(stored)
+      setForm(prev => ({ ...prev, bio: data.bio || '', dob: data.dob || '', avatar: data.avatar || '' }))
+    }
     setSaved(false)
   }
 
@@ -119,9 +134,9 @@ function PersonalInfoForm({ onSave }: { onSave: (data: typeof defaultData) => vo
             </label>
           </div>
           <p className="font-semibold text-sm text-gray-900">{form.fullName}</p>
-          <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">Admin</span>
+          <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">{userData.role || 'User'}</span>
           <p className="text-xs text-gray-500">{form.email}</p>
-          <p className="text-xs text-gray-500">{form.phone}</p>
+          <p className="text-xs text-gray-500">{form.phone || 'N/A'}</p>
         </div>
         <div className="flex-1 grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">
@@ -130,11 +145,11 @@ function PersonalInfoForm({ onSave }: { onSave: (data: typeof defaultData) => vo
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Email address</label>
-            <input type="email" name="email" value={form.email} onChange={handleChange} className="border border-gray-200 rounded-lg px-4 py-2 text-sm outline-none focus:border-green-500" />
+            <input type="email" name="email" value={form.email} disabled className="border border-gray-200 rounded-lg px-4 py-2 text-sm outline-none focus:border-green-500 bg-gray-50 text-gray-600" />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Phone Number</label>
-            <input type="tel" name="phone" value={form.phone} onChange={handleChange} className="border border-gray-200 rounded-lg px-4 py-2 text-sm outline-none focus:border-green-500" />
+            <input type="tel" name="phone" value={form.phone} disabled className="border border-gray-200 rounded-lg px-4 py-2 text-sm outline-none focus:border-green-500 bg-gray-50 text-gray-600" />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Date of Birth</label>
@@ -531,31 +546,49 @@ function ChatWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
 
 // ── Main Page ────────────────────────────────────────────
 export default function AccountPage() {
+  const navigate = useNavigate()
+  const [userData, setUserData] = useState<{ fullName: string; email: string; phoneNumber?: string; role?: string; avatar?: string } | null>(null)
   const [profile, setProfile] = useState({
-    fullName: 'John Doe',
-    bio: 'E-commerce enthusiast and admin of Vale Platform',
+    fullName: '',
+    bio: '',
     avatar: '',
   })
   const [chatOpen, setChatOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Load authenticated user data
+    const authUser = getUserData()
+    if (!authUser) {
+      // Not logged in, redirect to login
+      navigate('/login')
+      return
+    }
+    
+    setUserData(authUser)
+    
+    // Load editable profile data from localStorage
     const stored = localStorage.getItem('profileData')
     if (stored) {
       const data = JSON.parse(stored)
-      setProfile({ fullName: data.fullName, bio: data.bio, avatar: data.avatar })
+      setProfile({ fullName: authUser.fullName, bio: data.bio || '', avatar: data.avatar || '' })
+    } else {
+      setProfile({ fullName: authUser.fullName, bio: '', avatar: '' })
     }
-  }, [])
+    
+    setLoading(false)
+  }, [navigate])
 
-  const handleSave = (data: typeof defaultData) => {
-    setProfile({ fullName: data.fullName, bio: data.bio, avatar: data.avatar })
+  if (loading || !userData) {
+    return <div className="min-h-screen bg-gray-100 p-8 flex items-center justify-center">Loading...</div>
   }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <PageHeader profile={profile} />
+      <PageHeader profile={{ ...profile, role: userData.role }} />
       <div className="max-w-7xl mx-auto grid grid-cols-[1fr_340px] gap-6">
         <div className="flex flex-col gap-6">
-          <PersonalInfoForm onSave={handleSave} />
+          <PersonalInfoForm userData={userData} />
           <ProfilePreview profile={profile} />
         </div>
         <div className="flex flex-col gap-6">
