@@ -4,16 +4,58 @@ import { motion, AnimatePresence } from "motion/react";
 import { ShoppingCart, ArrowRight, ArrowLeft, CheckCircle2 } from "lucide-react";
 import type { CheckoutStep, CartItemType, ShippingOption, PromoCode, Address } from "../commerce/types";
 import { cartItems as INITIAL_CART_ITEMS, PROMO_CODES, SAVED_ADDRESSES, SHIPPING_OPTIONS } from "../commerce/data/mockData";
+import { useEffect } from "react";
+import { getAuthToken } from "../api/auth";
 
 export default function CartPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState<CheckoutStep>("cart");
-  const [items, setItems] = useState<CartItemType[]>(() => INITIAL_CART_ITEMS);
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedShipping, setSelectedShipping] = useState<ShippingOption>(SHIPPING_OPTIONS[0]);
   const [activePromo, setActivePromo] = useState<PromoCode | null>(null);
   const [selectedAddress] = useState<Address>(SAVED_ADDRESSES[0]);
 
-  const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items]);
+  useEffect(() => {
+  loadCart();
+}, []);
+
+async function loadCart() {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/cart`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+      setItems(result.data.items);
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+}
+
+  const subtotal = useMemo(
+  () =>
+    items.reduce(
+      (sum, item) =>
+        sum +
+        Number(item.product?.price || 0) *
+          item.quantity,
+      0
+    ),
+  [items]
+);
   const discount = useMemo(() => {
     if (!activePromo) return 0;
     if (activePromo.discountType === "percentage") return Math.floor((subtotal * activePromo.value) / 100);
@@ -28,12 +70,58 @@ export default function CartPage() {
     setStep((s) => (s === "success" ? "payment-selection" : s === "payment-selection" ? "shipping-payment" : "cart"));
   }
 
-  function updateQty(id: number, quantity: number) {
-    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item)));
+  async function updateQty(id: string, quantity: number) {
+  if (quantity < 1) return;
+
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/cart/items/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          quantity,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+      setItems(result.data.items);
+    }
+  } catch (error) {
+    console.error(error);
   }
-  function removeItem(id: number) {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+}
+  async function removeItem(id: string) {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/cart/items/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+      setItems(result.data.items);
+    }
+  } catch (error) {
+    console.error(error);
   }
+}
 
   return (
     <div className="min-h-screen bg-[#F9F6F0] text-[#4B433D]">
@@ -61,15 +149,23 @@ export default function CartPage() {
                   <span className="text-xs text-[#8D8178]">{items.length} item(s)</span>
                 </div>
                 <div className="mt-5 space-y-4">
-                  {items.length === 0 ? (
+                  {loading ? (
+                      <div className="text-sm text-[#8D8178]">
+                        Loading cart...
+                      </div>
+                    ) : items.length === 0 ? (
                     <div className="text-sm text-[#8D8178]">Your cart is empty.</div>
                   ) : (
                     items.map((item) => (
                       <div key={item.id} className="flex gap-4 items-center bg-white/70 border border-[#E7DBD0]/70 rounded-2xl p-4">
-                        <img src={item.image} alt={item.name} className="w-16 h-16 rounded-xl object-cover border border-[#E7DBD0]/70" />
+                        <img
+                          src={
+                            item.product?.image_url ||
+                            "https://via.placeholder.com/150"
+                          } alt={item.product?.name} className="w-16 h-16 rounded-xl object-cover border border-[#E7DBD0]/70" />
                         <div className="min-w-0 flex-1">
-                          <div className="font-bold text-sm truncate">{item.name}</div>
-                          <div className="text-[11px] text-[#8D8178] mt-0.5">₦ {item.price.toLocaleString()} • {item.color || "Default"}</div>
+                          <div className="font-bold text-sm truncate">{item.product?.name}</div>
+                          <div className="text-[11px] text-[#8D8178] mt-0.5">₦ {Number(item.product?.price).toLocaleString()} • {item.color || "Default"}</div>
                           <div className="mt-2 flex items-center gap-2">
                             <button type="button" className="w-8 h-8 rounded-full border border-[#E7DBD0] bg-white" onClick={() => updateQty(item.id, item.quantity - 1)}>-</button>
                             <span className="w-8 text-center text-sm font-bold">{item.quantity}</span>
