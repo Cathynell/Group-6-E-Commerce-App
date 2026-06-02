@@ -19,23 +19,21 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
-const orders = [
-  { id: "#ORD-0029", customer: "John Doe", date: "May 26, 2024", amount: "N25,000", status: "Completed" },
-  { id: "#ORD-0028", customer: "Jane Smith", date: "May 26, 2024", amount: "N15,500", status: "Pending" },
-  { id: "#ORD-0027", customer: "Mike Johnson", date: "May 26, 2024", amount: "N32,000", status: "Completed" },
-  { id: "#ORD-0026", customer: "Sarah Williams", date: "May 25, 2024", amount: "N12,000", status: "Pending" },
-  { id: "#ORD-0025", customer: "David Brown", date: "May 25, 2024", amount: "N18,750", status: "Canceled" },
-  { id: "#ORD-0024", customer: "Emily Davis", date: "May 24, 2024", amount: "N8,000", status: "Completed" },
-];
+import { useEffect } from "react";
+import { getAuthToken } from "../api/auth";
 
-type Order = (typeof orders)[number];
+type Order = {
+  id: string;
+  user_id: string;
+  order_number: string;
+  status: string;
+  payment_status: string;
+  total_amount: number;
+  created_at: string;
+  shipping_address: string;
+};
 
-const summaryCards = [
-  { title: "Total Orders", value: "1,290", delta: "18% from last month", icon: ClipboardList, tone: "blue" },
-  { title: "Pending Orders", value: "230", delta: "8% from last month", icon: ShoppingBag, tone: "gold" },
-  { title: "Completed Orders", value: "1,030", delta: "20% from last month", icon: Package, tone: "green" },
-  { title: "Canceled Orders", value: "30", delta: "25% from last month", icon: X, tone: "red" },
-];
+
 
 const navItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
@@ -46,6 +44,8 @@ const navItems = [
 ];
 
 export default function OrdersPage() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All Status");
@@ -55,37 +55,106 @@ export default function OrdersPage() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
-  const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
-      const haystack = `${order.id} ${order.customer} ${order.amount}`.toLowerCase();
-      const matchesSearch = haystack.includes(query.toLowerCase().trim());
-      const matchesStatus = status === "All Status" || order.status === status;
-      const matchesDate =
-        dateRange === "May 20, 2024 - May 26, 2024" ||
-        (dateRange === "May 26, 2024" && order.date === "May 26, 2024") ||
-        (dateRange === "May 25, 2024" && order.date === "May 25, 2024");
+  useEffect(() => {
+  loadOrders();
+}, []);
 
-      return matchesSearch && matchesStatus && matchesDate;
-    });
-  }, [query, status, dateRange]);
+async function loadOrders() {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/orders`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+      setOrders(result.data);
+    } else {
+      console.error(result.message);
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+}
+
+ const filteredOrders = useMemo(() => {
+  return orders.filter((order) => {
+    const haystack =
+      `${order.order_number} ${order.status} ${order.payment_status}`
+        .toLowerCase();
+
+    const matchesSearch = haystack.includes(
+      query.toLowerCase().trim()
+    );
+
+    const matchesStatus =
+      status === "All Status" ||
+      order.status.toLowerCase() === status.toLowerCase();
+
+    return matchesSearch && matchesStatus;
+  });
+}, [orders, query, status]);
 
   function resetToFirstPage<T>(setter: Dispatch<SetStateAction<T>>, value: T) {
     setter(value);
     setPage(1);
   }
 
-  function exportOrders() {
-    const headers = ["Order ID", "Customer", "Date", "Amount", "Status"];
-    const rows = filteredOrders.map((order) => [order.id, order.customer, order.date, order.amount, order.status]);
-    const csv = [headers, ...rows].map((row) => row.map((cell) => `"${cell}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "orders.csv";
-    link.click();
-    URL.revokeObjectURL(url);
+function exportOrders() {
+  const headers = [
+    "Order Number",
+    "Status",
+    "Payment Status",
+    "Amount",
+    "Created At",
+  ];
+
+  const rows = filteredOrders.map((order) => [
+    order.order_number,
+    order.status,
+    order.payment_status,
+    order.total_amount,
+    new Date(order.created_at).toLocaleString(),
+  ]);
+
+  const csv = [headers, ...rows]
+    .map((row) =>
+      row.map((cell) => `"${cell}"`).join(",")
+    )
+    .join("\n");
+
+  const blob = new Blob([csv], {
+    type: "text/csv;charset=utf-8",
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "orders.csv";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function getCustomerName(order: Order) {
+  try {
+    const address = JSON.parse(order.shipping_address);
+    return address.fullName || "Unknown Customer";
+  } catch {
+    return "Unknown Customer";
   }
+}
 
   return (
     <main className="shell">
@@ -174,30 +243,15 @@ export default function OrdersPage() {
           <p>Track and manage customer orders.</p>
         </div>
 
-        <section className="summary-grid" aria-label="Order summary">
-          {summaryCards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <article className="summary-card" key={card.title}>
-                <div className={`summary-icon ${card.tone}`}>
-                  <Icon size={21} />
-                </div>
-                <div>
-                  <p>{card.title}</p>
-                  <strong>{card.value}</strong>
-                  <span>{card.delta}</span>
-                </div>
-              </article>
-            );
-          })}
-        </section>
+
 
         <section className="filters" aria-label="Order filters">
           <select value={status} onChange={(event) => resetToFirstPage(setStatus, event.target.value)}>
             <option>All Status</option>
-            <option>Completed</option>
-            <option>Pending</option>
-            <option>Canceled</option>
+            <option>confirmed</option>
+            <option>processing</option>
+            <option>pending</option>
+            <option>cancelled</option>
           </select>
 
           <div className="filter-right">
@@ -214,6 +268,11 @@ export default function OrdersPage() {
         </section>
 
         <section className="table-panel">
+          {loading && (
+            <div className="p-4 text-sm">
+              Loading orders...
+            </div>
+          )}
           <div className="table-wrap">
             <table>
               <thead>
@@ -229,10 +288,14 @@ export default function OrdersPage() {
               <tbody>
                 {filteredOrders.map((order) => (
                   <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.customer}</td>
-                    <td>{order.date}</td>
-                    <td>{order.amount}</td>
+                    <td>{order.order_number}</td>
+                    <td>{getCustomerName(order)}</td>
+                    <td>
+                      {new Date(order.created_at).toLocaleDateString()}
+                    </td>
+                    <td>
+                      ₦ {Number(order.total_amount).toLocaleString()}
+                    </td>
                     <td>
                       <span className={`status ${order.status.toLowerCase()}`}>{order.status}</span>
                     </td>
@@ -261,33 +324,9 @@ export default function OrdersPage() {
         </section>
 
         <footer className="pagination">
-          <p>Showing 1 to {filteredOrders.length} of 1,290 orders</p>
-          <div className="page-controls">
-            <button
-              aria-label="Previous page"
-              disabled={page === 1}
-              onClick={() => setPage((current) => Math.max(1, current - 1))}
-              type="button"
-            >
-              <ChevronLeft size={17} />
-            </button>
-            {[1, 2, 3].map((item) => (
-              <button className={page === item ? "selected" : ""} key={item} onClick={() => setPage(item)} type="button">
-                {item}
-              </button>
-            ))}
-            <span>...</span>
-            <button className={page === 215 ? "selected" : ""} onClick={() => setPage(215)} type="button">
-              215
-            </button>
-            <button
-              aria-label="Next page"
-              onClick={() => setPage((current) => Math.min(215, current + 1))}
-              type="button"
-            >
-              <ChevronRight size={17} />
-            </button>
-          </div>
+          <p>
+            Showing {filteredOrders.length} order(s)
+          </p>
         </footer>
       </section>
 
@@ -302,30 +341,48 @@ export default function OrdersPage() {
             <button aria-label="Close order details" className="modal-close" onClick={() => setViewedOrder(null)} type="button">
               <X size={18} />
             </button>
-            <h2>{viewedOrder.id}</h2>
+            <h2>{viewedOrder.order_number}</h2>
             <dl>
-              <div>
-                <dt>Customer</dt>
-                <dd>{viewedOrder.customer}</dd>
-              </div>
-              <div>
-                <dt>Date</dt>
-                <dd>{viewedOrder.date}</dd>
-              </div>
-              <div>
-                <dt>Amount</dt>
-                <dd>{viewedOrder.amount}</dd>
-              </div>
-              <div>
-                <dt>Status</dt>
-                <dd>
-                  <span className={`status ${viewedOrder.status.toLowerCase()}`}>{viewedOrder.status}</span>
-                </dd>
-              </div>
+  <div>
+    <dt>Order Number</dt>
+    <dd>{viewedOrder.order_number}</dd>
+  </div>
+
+  <div>
+    <dt>Status</dt>
+    <dd>
+      <span
+        className={`status ${viewedOrder.status.toLowerCase()}`}
+      >
+        {viewedOrder.status}
+      </span>
+    </dd>
+  </div>
+
+  <div>
+    <dt>Payment Status</dt>
+    <dd>{viewedOrder.payment_status}</dd>
+  </div>
+
+  <div>
+    <dt>Total Amount</dt>
+    <dd>
+      ₦ {Number(viewedOrder.total_amount).toLocaleString()}
+    </dd>
+  </div>
+
+  <div>
+    <dt>Created At</dt>
+    <dd>
+      {new Date(
+        viewedOrder.created_at
+      ).toLocaleString()}
+    </dd>
+  </div>
             </dl>
-          </section>
-        </div>
-      )}
-    </main>
-  );
+                      </section>
+                    </div>
+                  )}
+                </main>
+              );
 }

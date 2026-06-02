@@ -14,7 +14,9 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const [selectedShipping, setSelectedShipping] = useState<ShippingOption>(SHIPPING_OPTIONS[0]);
   const [activePromo, setActivePromo] = useState<PromoCode | null>(null);
-  const [selectedAddress] = useState<Address>(SAVED_ADDRESSES[0]);
+  const [selectedAddress, setSelectedAddress] = useState<Address>(
+  SAVED_ADDRESSES[0]
+);
 
   useEffect(() => {
   loadCart();
@@ -123,6 +125,84 @@ async function loadCart() {
   }
 }
 
+async function handleCheckout() {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/checkout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          paymentMethod: "wallet",
+          shippingAddress: {
+  fullName:
+    selectedAddress.fullName ||
+    SAVED_ADDRESSES[0].fullName,
+
+  phoneNumber:
+    selectedAddress.phone ||
+    SAVED_ADDRESSES[0].phone,
+
+  line1:
+    selectedAddress.street ||
+    SAVED_ADDRESSES[0].street,
+
+  city:
+    selectedAddress.city ||
+    SAVED_ADDRESSES[0].city,
+
+  state:
+    selectedAddress.state ||
+    SAVED_ADDRESSES[0].state,
+
+  postalCode:
+    selectedAddress.zipCode ||
+    SAVED_ADDRESSES[0].zipCode,
+
+  country: "Nigeria",
+},
+          notes: "Checkout from frontend",
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    console.log(result);
+
+    console.log("CHECKOUT RESPONSE", result);
+
+if (result.success) {
+  setStep("success");
+  setItems([]);
+} else {
+  if (result.data?.currentBalance) {
+    alert(
+      `Insufficient wallet balance.
+
+Current Balance: ₦${Number(
+        result.data.currentBalance
+      ).toLocaleString()}
+
+Order Total: ₦${Number(
+        result.data.total
+      ).toLocaleString()}`
+    );
+  } else {
+    alert(result.message);
+  }
+}
+} catch (error) {
+  console.error(error);
+  alert("Checkout failed");
+}
+}
+
   return (
     <div className="min-h-screen bg-[#F9F6F0] text-[#4B433D]">
       <div className="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
@@ -187,10 +267,84 @@ async function loadCart() {
 
                 <div className="mt-5 grid gap-4">
                   <div className="bg-white/70 border border-[#E7DBD0]/70 rounded-2xl p-4">
-                    <div className="text-[10px] font-extrabold tracking-widest text-[#8D8178] uppercase">Address</div>
-                    <div className="mt-2 text-sm font-bold">{selectedAddress.fullName}</div>
-                    <div className="text-xs text-[#8D8178] mt-1">{selectedAddress.street}, {selectedAddress.city}, {selectedAddress.state} {selectedAddress.zipCode}</div>
-                  </div>
+  <div className="text-[10px] font-extrabold tracking-widest text-[#8D8178] uppercase">
+    Address
+  </div>
+
+  <div className="mt-3 grid gap-3">
+    <input
+      className="border border-[#E7DBD0] rounded-xl p-3 text-sm"
+      placeholder="Full Name"
+      value={selectedAddress.fullName}
+      onChange={(e) =>
+        setSelectedAddress({
+          ...selectedAddress,
+          fullName: e.target.value,
+        })
+      }
+    />
+
+    <input
+      className="border border-[#E7DBD0] rounded-xl p-3 text-sm"
+      placeholder="Phone Number"
+      value={selectedAddress.phone}
+      onChange={(e) =>
+        setSelectedAddress({
+          ...selectedAddress,
+          phone: e.target.value,
+        })
+      }
+    />
+
+    <input
+      className="border border-[#E7DBD0] rounded-xl p-3 text-sm"
+      placeholder="Street Address"
+      value={selectedAddress.street}
+      onChange={(e) =>
+        setSelectedAddress({
+          ...selectedAddress,
+          street: e.target.value,
+        })
+      }
+    />
+
+    <input
+      className="border border-[#E7DBD0] rounded-xl p-3 text-sm"
+      placeholder="City"
+      value={selectedAddress.city}
+      onChange={(e) =>
+        setSelectedAddress({
+          ...selectedAddress,
+          city: e.target.value,
+        })
+      }
+    />
+
+    <input
+      className="border border-[#E7DBD0] rounded-xl p-3 text-sm"
+      placeholder="State"
+      value={selectedAddress.state}
+      onChange={(e) =>
+        setSelectedAddress({
+          ...selectedAddress,
+          state: e.target.value,
+        })
+      }
+    />
+
+    <input
+      className="border border-[#E7DBD0] rounded-xl p-3 text-sm"
+      placeholder="Postal Code"
+      value={selectedAddress.zipCode}
+      onChange={(e) =>
+        setSelectedAddress({
+          ...selectedAddress,
+          zipCode: e.target.value,
+        })
+      }
+    />
+  </div>
+</div>
 
                   <div className="bg-white/70 border border-[#E7DBD0]/70 rounded-2xl p-4">
                     <div className="text-[10px] font-extrabold tracking-widest text-[#8D8178] uppercase">Delivery</div>
@@ -225,11 +379,19 @@ async function loadCart() {
                 <p className="text-xs text-[#8D8178] mt-1">This is a UI demo. Integrate payment gateway later.</p>
                 <div className="mt-5 grid gap-3">
                   <div className="rounded-2xl border border-[#E7DBD0]/70 bg-white/70 p-4">
-                    <div className="font-bold text-sm">Pay on delivery</div>
-                    <div className="text-xs text-[#8D8178] mt-1">Confirm order and pay when it arrives.</div>
+                    <div className="font-bold text-sm">
+                      Wallet Payment
+                    </div>
+
+                    <div className="text-xs text-[#8D8178] mt-1">
+                      Your order total will be deducted from your wallet balance.
+                    </div>
                   </div>
-                  <button type="button" onClick={next} className="w-full rounded-full bg-[#214F34] hover:bg-[#39644A] text-white font-bold py-3.5 text-sm transition-all flex items-center justify-center gap-2">
-                    Confirm payment <ArrowRight className="w-4 h-4" />
+                  <button
+                    type="button"
+                    onClick={handleCheckout}
+                  >
+                    Pay & Place Order
                   </button>
                 </div>
               </motion.div>
@@ -304,15 +466,22 @@ async function loadCart() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={next}
-              disabled={items.length === 0 || step === "success"}
-              className="mt-6 w-full rounded-full bg-[#214F34] hover:bg-[#39644A] disabled:opacity-50 text-white font-bold py-3.5 text-sm transition-all flex items-center justify-center gap-2"
-            >
-              {step === "cart" ? "Go to shipping" : step === "shipping-payment" ? "Go to payment" : step === "payment-selection" ? "Confirm" : "Done"}
-              <ArrowRight className="w-4 h-4" />
-            </button>
+           {step !== "payment-selection" && (
+              <button
+                type="button"
+                onClick={next}
+                disabled={items.length === 0 || step === "success"}
+                className="mt-6 w-full rounded-full bg-[#214F34] hover:bg-[#39644A] disabled:opacity-50 text-white font-bold py-3.5 text-sm transition-all flex items-center justify-center gap-2"
+              >
+                {step === "cart"
+                  ? "Go to shipping"
+                  : step === "shipping-payment"
+                  ? "Go to payment"
+                  : "Done"}
+
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
       </div>
