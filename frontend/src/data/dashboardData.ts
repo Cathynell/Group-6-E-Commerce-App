@@ -77,3 +77,13 @@ export const recentActivities = [
   { id: 3, type: "payment", message: "Payment of ₦25,000 received from Jane Smith", time: "3 hours ago", icon: "payment" },
   { id: 4, type: "user", message: "Mike Johnson registered a new account", time: "6 hours ago", icon: "user" },
 ];
+
+export const productsData = [
+  { id: 1, name: "Jade Wireless Headphone", category: "Electronics", price: "₦25,000", stock: 20, status: "active", icon: "🎧" },
+  { id: 2, name: "Jade Smart Watch", category: "Electronics", price: "₦45,000", stock: 15, status: "active", icon: "⌚" },
+  { id: 3, name: "Jade Earbuds Pro", category: "Electronics", price: "₦15,000", stock: 30, status: "active", icon: "🎵" },
+  { id: 4, name: "Jade Laptop Bag", category: "Accessories", price: "₦10,000", stock: 25, status: "active", icon: "💼" },
+  { id: 5, name: "Jade Sneakers", category: "Fashion", price: "₦35,000", stock: 12, status: "inactive", icon: "👟" },
+  { id: 6, name: "Jade Sunglasses", category: "Accessories", price: "₦6,000", stock: 18, status: "active", icon: "🕶️" },
+  { id: 7, name: "Jade Water Bottle", category: "Lifestyle", price: "₦5,000", stock: 50, status: "active", icon: "🍶" },
+];
