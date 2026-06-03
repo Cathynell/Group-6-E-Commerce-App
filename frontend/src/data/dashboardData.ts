@@ -87,3 +87,19 @@ export const productsData = [
   { id: 6, name: "Jade Sunglasses", category: "Accessories", price: "₦6,000", stock: 18, status: "active", icon: "🕶️" },
   { id: 7, name: "Jade Water Bottle", category: "Lifestyle", price: "₦5,000", stock: 50, status: "active", icon: "🍶" },
 ];
+
+// ─── Customers Data ───────────────────────────────────────────────
+export const customersData = [
+  { id: 1, name: "Cathy Ajayi", email: "cathy@email.com", orders: 12, status: "active", joined: "May 20, 2024", avatar: "CA" },
+  { id: 2, name: "John Doe", email: "john@email.com", orders: 8, status: "active", joined: "May 15, 2024", avatar: "JD" },
+  { id: 3, name: "Jane Smith", email: "jane@email.com", orders: 15, status: "active", joined: "May 15, 2024", avatar: "JS" },
+  { id: 4, name: "Mike Johnson", email: "mike@email.com", orders: 5, status: "inactive", joined: "May 10, 2024", avatar: "MJ" },
+  { id: 5, name: "Sarah Williams", email: "sarah@email.com", orders: 7, status: "active", joined: "May 3, 2024", avatar: "SW" },
+  { id: 6, name: "David Brown", email: "david@email.com", orders: 3, status: "active", joined: "May 3, 2024", avatar: "DB" },
+];
+
+export const customerStats = [
+  { id: "total", label: "Total Customers", value: "850", change: "+13%", positive: true, color: "#4caf43", bg: "#e8f5e5", icon: "users" },
+  { id: "active", label: "Active Customers", value: "620", change: "+6%", positive: true, color: "#2196f3", bg: "#e3f2fd", icon: "users" },
+  { id: "new", label: "New This Week", value: "35", change: "+15%", positive: true, color: "#ff9800", bg: "#fff3e0", icon: "users" },
+];

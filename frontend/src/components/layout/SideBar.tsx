@@ -36,18 +36,22 @@ export default function Sidebar() {
       }}
     >
       {/* Logo */}
-      <div style={{ padding: "24px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-        <span
-          style={{
-            fontFamily: "'Fredoka One', cursive",
-            fontSize: "2.2rem",
-            color: "#5dcc52",
-            letterSpacing: "0.06em",
-          }}
-        >
-          vale
-        </span>
-      </div>
+<div style={{ padding: "24px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Righteous&display=swap"
+    rel="stylesheet"
+  />
+  <span
+    style={{
+      fontFamily: "'Righteous', cursive",
+      fontSize: "2.2rem",
+      color: "#5dcc52",
+      letterSpacing: "0.05em",
+    }}
+  >
+    vale
+  </span>
+</div>
 
       {/* Navigation */}
       <nav style={{ flex: 1, padding: "20px 12px", overflowY: "auto" }}>

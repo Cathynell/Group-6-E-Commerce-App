@@ -11,6 +11,7 @@ import OrdersPage from './pages/OrdersPage';
 import ProductsPage from './pages/ProductsPage';
 import CustomersPage from './pages/CustomersPage';
 import SettingsPage from './pages/SettingsPage';
+import AdminDashboard from './pages/AdminDashboard';
 import { getAuthToken } from './api/auth';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/confirmation" element={<Navigate to="/cart" replace />} />
         <Route path="/wallet/fund" element={<Navigate to="/account" replace />} />
         <Route path="/splash" element={<SplashPage />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="*" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
       </Routes>
     </Router>
