@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clothesImg from '../assets/clothes.jpg';
-import { extractToken, login, setAuthToken } from '../api/auth';
+import { extractToken, extractUserData, login, setAuthToken, setUserData } from '../api/auth';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +24,13 @@ export default function LoginPage() {
         return;
       }
       setAuthToken(token);
+      
+      // Extract and store user data from response
+      const userData = extractUserData(response);
+      if (userData) {
+        setUserData(userData);
+      }
+      
       navigate('/dashboard');
     } catch (error: any) {
       alert(error?.message || 'Login failed. Please try again.');

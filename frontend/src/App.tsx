@@ -13,6 +13,7 @@ import CustomersPage from './pages/CustomersPage';
 import SettingsPage from './pages/SettingsPage';
 import AdminDashboard from './pages/AdminDashboard';
 import { getAuthToken } from './api/auth';
+import WalletPage from './pages/WalletPage';
 
 function App() {
   const token = getAuthToken();
@@ -33,7 +34,7 @@ function App() {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/checkout" element={<Navigate to="/cart" replace />} />
         <Route path="/confirmation" element={<Navigate to="/cart" replace />} />
-        <Route path="/wallet/fund" element={<Navigate to="/account" replace />} />
+        <Route path="/wallet/fund" element={<WalletPage />} />
         <Route path="/splash" element={<SplashPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="*" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />

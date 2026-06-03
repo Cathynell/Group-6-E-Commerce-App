@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import textingImg from '../assets/texting.jpg';
-import { extractToken, setAuthToken, signup } from '../api/auth';
+import { extractToken, extractUserData, setAuthToken, setUserData, signup } from '../api/auth';
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +23,14 @@ export default function SignupPage() {
       const response = await signup({ fullName: name, email, password });
       const token = extractToken(response);
       // Signup should not auto-navigate to dashboard; user must explicitly log in.
-      if (token) setAuthToken(token);
+      if (token) {
+        setAuthToken(token);
+        // Extract and store user data from signup response if available
+        const userData = extractUserData(response);
+        if (userData) {
+          setUserData(userData);
+        }
+      }
       alert('Account created successfully. Please log in.');
       navigate('/login');
     } catch (error: any) {
