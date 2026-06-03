@@ -11,8 +11,8 @@ import {
 
 const navLinks = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Products", href: "/products", icon: ShoppingBag },
-  { label: "Customers", href: "/customers", icon: Users },
+  { label: "Products", href: "/admin/products", icon: ShoppingBag },
+  { label: "Customers", href: "/admin/customers", icon: Users },
   { label: "Orders", href: "/orders", icon: ClipboardList },
   { label: "Settings", href: "/settings", icon: Settings },
 ];

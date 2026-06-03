@@ -12,6 +12,8 @@ import ProductsPage from './pages/ProductsPage';
 import CustomersPage from './pages/CustomersPage';
 import SettingsPage from './pages/SettingsPage';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminProductsPage from "./pages/AdminProductsPage";
+import AdminCustomersPage from './pages/AdminCustomersPage';
 import { getAuthToken } from './api/auth';
 import WalletPage from './pages/WalletPage';
 
@@ -37,6 +39,8 @@ function App() {
         <Route path="/wallet/fund" element={<WalletPage />} />
         <Route path="/splash" element={<SplashPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/products" element={<AdminProductsPage />} />
+        <Route path="/admin/customers" element={<AdminCustomersPage />} />
         <Route path="*" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
       </Routes>
     </Router>
